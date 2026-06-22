@@ -83,7 +83,7 @@ export default async function PipelinePage({
 
       {companies?.length === 0 ? (
         <p className="rounded-lg border border-dashed border-stone-300 p-6 text-center text-sm text-stone-400">
-          Add a company first, then deals can be created here or from a company's page.
+          Add a company first, then deals can be created here or from a company&apos;s page.
         </p>
       ) : (
         <KanbanBoard stages={stages ?? []} deals={dealCards} />
