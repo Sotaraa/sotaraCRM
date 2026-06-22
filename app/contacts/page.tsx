@@ -1,57 +1,46 @@
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { Avatar } from "@/components/avatar";
+import { ContactsTable } from "@/components/contacts-table";
+import { createContactStandalone } from "@/lib/actions";
 
 export default async function ContactsPage() {
   const supabase = await createClient();
-  const { data: contacts } = await supabase
-    .from("contacts")
-    .select("*, companies(id, name)")
-    .order("created_at", { ascending: false });
+  const [{ data: contacts }, { data: companies }] = await Promise.all([
+    supabase.from("contacts").select("*, companies(id, name)").order("created_at", { ascending: false }),
+    supabase.from("companies").select("id, name").order("name"),
+  ]);
 
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-semibold text-stone-900">Contacts</h1>
-      <div className="table-shell">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Company</th>
-              <th>Email</th>
-              <th>Phone</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contacts?.map((contact) => (
-              <tr key={contact.id}>
-                <td className="font-medium text-stone-800">
-                  <div className="flex items-center gap-3">
-                    <Avatar name={contact.name} size="sm" />
-                    {contact.name}
-                  </div>
-                </td>
-                <td className="text-stone-600">{contact.role ?? "—"}</td>
-                <td>
-                  <Link href={`/companies/${(contact as any).companies?.id}`} className="link-accent">
-                    {(contact as any).companies?.name}
-                  </Link>
-                </td>
-                <td className="text-stone-600">{contact.email ?? "—"}</td>
-                <td className="text-stone-600">{contact.phone ?? "—"}</td>
-              </tr>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-semibold text-stone-900">Contacts</h1>
+
+      <details className="disclosure card">
+        <summary>+ Add contact</summary>
+        <form action={createContactStandalone} className="mt-4 grid grid-cols-2 gap-3">
+          <select name="company_id" required className="input-field col-span-2">
+            <option value="">Select company</option>
+            {companies?.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
             ))}
-            {contacts?.length === 0 && (
-              <tr>
-                <td colSpan={5} className="py-6 text-center text-stone-400">
-                  No contacts yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          </select>
+          <input name="name" placeholder="Name" required className="input-field" />
+          <input name="role" placeholder="Role" className="input-field" />
+          <input name="email" placeholder="Email" type="email" className="input-field" />
+          <input name="phone" placeholder="Phone" className="input-field" />
+          <button type="submit" className="btn-primary col-span-2 w-fit">
+            Add contact
+          </button>
+        </form>
+      </details>
+
+      {companies?.length === 0 ? (
+        <p className="rounded-lg border border-dashed border-stone-300 p-6 text-center text-sm text-stone-400">
+          Add a company first before adding contacts.
+        </p>
+      ) : (
+        <ContactsTable contacts={(contacts as any) ?? []} />
+      )}
     </div>
   );
 }

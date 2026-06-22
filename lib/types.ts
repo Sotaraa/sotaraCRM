@@ -2,6 +2,7 @@ export type LifecycleStage = "lead" | "customer" | "churned";
 export type DealStatus = "open" | "won" | "lost";
 export type SubscriptionStatus = "active" | "cancelled" | "paused";
 export type ActivityType = "note" | "call" | "email" | "demo";
+export type TaskStatus = "open" | "done";
 
 export interface Company {
   id: string;
@@ -69,4 +70,15 @@ export interface Activity {
   body: string;
   created_by: string | null;
   created_at: string;
+}
+
+export interface Task {
+  id: string;
+  company_id: string;
+  deal_id: string | null;
+  title: string;
+  due_date: string | null;
+  status: TaskStatus;
+  created_at: string;
+  completed_at: string | null;
 }

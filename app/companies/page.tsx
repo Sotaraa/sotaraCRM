@@ -1,7 +1,5 @@
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { Badge } from "@/components/badge";
-import { Avatar } from "@/components/avatar";
+import { CompaniesTable } from "@/components/companies-table";
 import { createCompany } from "./actions";
 
 export default async function CompaniesPage() {
@@ -12,12 +10,10 @@ export default async function CompaniesPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-stone-900">Companies</h1>
-      </div>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-semibold text-stone-900">Companies</h1>
 
-      <details className="disclosure card mb-6">
+      <details className="disclosure card">
         <summary>+ Add company</summary>
         <form action={createCompany} className="mt-4 grid grid-cols-2 gap-3">
           <input name="name" placeholder="Company name" required className="input-field col-span-2" />
@@ -39,42 +35,7 @@ export default async function CompaniesPage() {
         </form>
       </details>
 
-      <div className="table-shell">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Stage</th>
-              <th>Website</th>
-            </tr>
-          </thead>
-          <tbody>
-            {companies?.map((company) => (
-              <tr key={company.id}>
-                <td>
-                  <Link href={`/companies/${company.id}`} className="flex items-center gap-3">
-                    <Avatar name={company.name} size="sm" />
-                    <span className="link-accent">{company.name}</span>
-                  </Link>
-                </td>
-                <td className="text-stone-600">{company.type ?? "—"}</td>
-                <td>
-                  <Badge value={company.lifecycle_stage} />
-                </td>
-                <td className="text-stone-600">{company.website ?? "—"}</td>
-              </tr>
-            ))}
-            {companies?.length === 0 && (
-              <tr>
-                <td colSpan={4} className="py-6 text-center text-stone-400">
-                  No companies yet. Add your first lead above.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <CompaniesTable companies={companies ?? []} />
     </div>
   );
 }
