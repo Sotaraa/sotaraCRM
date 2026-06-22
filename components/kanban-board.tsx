@@ -23,11 +23,13 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
   const [items, setItems] = useState(deals);
   const [, startTransition] = useTransition();
   const [dragging, setDragging] = useState<string | null>(null);
+  const [overStage, setOverStage] = useState<string | null>(null);
 
   function onDrop(stageId: string) {
     if (!dragging) return;
     const dealId = dragging;
     setDragging(null);
+    setOverStage(null);
 
     setItems((prev) => prev.map((d) => (d.id === dealId ? { ...d, stage_id: stageId } : d)));
 
@@ -45,17 +47,24 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
       {stages.map((stage) => {
         const stageDeals = items.filter((d) => d.stage_id === stage.id);
         const total = stageDeals.reduce((sum, d) => sum + (d.value ?? 0), 0);
+        const isOver = overStage === stage.id;
 
         return (
           <div
             key={stage.id}
-            onDragOver={(e) => e.preventDefault()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setOverStage(stage.id);
+            }}
+            onDragLeave={() => setOverStage((s) => (s === stage.id ? null : s))}
             onDrop={() => onDrop(stage.id)}
-            className="w-64 flex-shrink-0 rounded-lg bg-slate-100 p-3"
+            className={`w-64 flex-shrink-0 rounded-xl border p-3 transition-colors ${
+              isOver ? "border-brand/40 bg-brand-tint" : "border-stone-200 bg-stone-100/70"
+            }`}
           >
             <div className="mb-3 flex items-center justify-between px-1">
-              <h3 className="text-sm font-semibold text-slate-700">{stage.name}</h3>
-              <span className="text-xs text-slate-400">{formatCurrency(total)}</span>
+              <h3 className="text-sm font-semibold text-stone-700">{stage.name}</h3>
+              <span className="text-xs text-stone-400">{formatCurrency(total)}</span>
             </div>
             <div className="space-y-2">
               {stageDeals.map((deal) => (
@@ -63,17 +72,21 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
                   key={deal.id}
                   draggable
                   onDragStart={() => setDragging(deal.id)}
-                  className="cursor-grab rounded-md border border-slate-200 bg-white p-3 shadow-sm active:cursor-grabbing"
+                  onDragEnd={() => {
+                    setDragging(null);
+                    setOverStage(null);
+                  }}
+                  className="cursor-grab rounded-lg border border-stone-200 bg-white p-3 shadow-crisp transition-shadow hover:shadow-card active:cursor-grabbing"
                 >
-                  <Link href={`/companies/${deal.company_id}`} className="text-sm font-medium text-brand">
+                  <Link href={`/companies/${deal.company_id}`} className="text-sm font-medium text-brand hover:text-brand-dark">
                     {deal.company_name}
                   </Link>
-                  <div className="mt-1 text-xs text-slate-500">{deal.product_name ?? "—"}</div>
-                  <div className="mt-1 text-xs font-medium text-slate-700">{formatCurrency(deal.value)}</div>
+                  <div className="mt-1 text-xs text-stone-500">{deal.product_name ?? "—"}</div>
+                  <div className="mt-1.5 text-xs font-semibold text-stone-700">{formatCurrency(deal.value)}</div>
                 </div>
               ))}
               {stageDeals.length === 0 && (
-                <div className="rounded-md border border-dashed border-slate-300 p-3 text-center text-xs text-slate-400">
+                <div className="rounded-lg border border-dashed border-stone-300 p-3 text-center text-xs text-stone-400">
                   Drop here
                 </div>
               )}

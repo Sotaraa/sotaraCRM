@@ -36,16 +36,16 @@ export default async function PipelinePage({
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-900">Pipeline</h1>
+        <h1 className="text-2xl font-semibold text-stone-900">Pipeline</h1>
         <form className="flex items-center gap-2">
-          <label className="text-sm text-slate-500">Product</label>
+          <label className="text-sm text-stone-500">Product</label>
           <AutoSubmitSelect
             name="product"
             defaultValue={product ?? ""}
             options={[{ value: "", label: "All products" }, ...(products ?? []).map((p) => ({ value: p.id, label: p.name }))]}
           />
           <noscript>
-            <button type="submit" className="rounded border border-slate-300 px-3 py-1.5 text-sm">
+            <button type="submit" className="btn-secondary">
               Filter
             </button>
           </noscript>

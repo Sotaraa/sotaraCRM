@@ -1,19 +1,24 @@
-const STYLES: Record<string, string> = {
-  lead: "bg-amber-100 text-amber-800",
-  customer: "bg-emerald-100 text-emerald-800",
-  churned: "bg-slate-200 text-slate-600",
-  active: "bg-emerald-100 text-emerald-800",
-  cancelled: "bg-slate-200 text-slate-600",
-  paused: "bg-amber-100 text-amber-800",
-  open: "bg-blue-100 text-blue-800",
-  won: "bg-emerald-100 text-emerald-800",
-  lost: "bg-red-100 text-red-700",
+const STYLES: Record<string, { dot: string; text: string }> = {
+  lead: { dot: "bg-amber-500", text: "text-amber-700" },
+  customer: { dot: "bg-emerald-600", text: "text-emerald-700" },
+  churned: { dot: "bg-stone-400", text: "text-stone-500" },
+  active: { dot: "bg-emerald-600", text: "text-emerald-700" },
+  cancelled: { dot: "bg-stone-400", text: "text-stone-500" },
+  paused: { dot: "bg-amber-500", text: "text-amber-700" },
+  open: { dot: "bg-brand", text: "text-brand" },
+  won: { dot: "bg-emerald-600", text: "text-emerald-700" },
+  lost: { dot: "bg-red-500", text: "text-red-600" },
+  note: { dot: "bg-stone-400", text: "text-stone-500" },
+  call: { dot: "bg-brand", text: "text-brand" },
+  email: { dot: "bg-amber-500", text: "text-amber-700" },
+  demo: { dot: "bg-emerald-600", text: "text-emerald-700" },
 };
 
 export function Badge({ value }: { value: string }) {
-  const style = STYLES[value] ?? "bg-slate-100 text-slate-700";
+  const style = STYLES[value] ?? { dot: "bg-stone-400", text: "text-stone-500" };
   return (
-    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${style}`}>
+    <span className={`inline-flex items-center gap-1.5 text-xs font-medium capitalize ${style.text}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
       {value}
     </span>
   );

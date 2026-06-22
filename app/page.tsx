@@ -35,36 +35,36 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
+      <h1 className="text-2xl font-semibold text-stone-900">Dashboard</h1>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="rounded-lg border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Open pipeline value</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-900">{formatCurrency(pipelineValue)}</p>
+        <div className="card">
+          <p className="section-title">Open pipeline value</p>
+          <p className="mt-2 font-display text-3xl font-semibold text-stone-900">{formatCurrency(pipelineValue)}</p>
         </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Open deals</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-900">{openDeals?.length ?? 0}</p>
+        <div className="card">
+          <p className="section-title">Open deals</p>
+          <p className="mt-2 font-display text-3xl font-semibold text-stone-900">{openDeals?.length ?? 0}</p>
         </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Renewals next 60 days</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-900">{renewals?.length ?? 0}</p>
+        <div className="card">
+          <p className="section-title">Renewals next 60 days</p>
+          <p className="mt-2 font-display text-3xl font-semibold text-stone-900">{renewals?.length ?? 0}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-6">
-        <section className="rounded-lg border border-slate-200 bg-white p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Deals by stage</h2>
-            <Link href="/pipeline" className="text-sm text-brand">
+        <section className="card">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="section-title">Deals by stage</h2>
+            <Link href="/pipeline" className="link-accent text-sm">
               View pipeline →
             </Link>
           </div>
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {dealsByStage.map(({ stage, count, value }) => (
               <li key={stage.id} className="flex items-center justify-between text-sm">
-                <span className="text-slate-700">{stage.name}</span>
-                <span className="text-slate-500">
+                <span className="text-stone-700">{stage.name}</span>
+                <span className="text-stone-500">
                   {count} · {formatCurrency(value)}
                 </span>
               </li>
@@ -72,46 +72,46 @@ export default async function DashboardPage() {
           </ul>
         </section>
 
-        <section className="rounded-lg border border-slate-200 bg-white p-5">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Upcoming renewals</h2>
-          <ul className="space-y-2">
+        <section className="card">
+          <h2 className="section-title mb-4">Upcoming renewals</h2>
+          <ul className="space-y-3">
             {renewals?.map((sub) => {
               const days = daysUntil(sub.renewal_date);
               return (
                 <li key={sub.id} className="text-sm">
                   <div className="flex items-center justify-between">
-                    <Link href={`/companies/${(sub as any).companies?.id}`} className="font-medium text-brand">
+                    <Link href={`/companies/${(sub as any).companies?.id}`} className="link-accent">
                       {(sub as any).companies?.name}
                     </Link>
                     <span className="text-xs font-medium text-amber-600">{days}d</span>
                   </div>
-                  <div className="text-slate-500">
+                  <div className="text-stone-500">
                     {(sub as any).products?.name} · renews {formatDate(sub.renewal_date)}
                   </div>
                 </li>
               );
             })}
-            {renewals?.length === 0 && <li className="text-sm text-slate-400">No renewals coming up.</li>}
+            {renewals?.length === 0 && <li className="text-sm text-stone-400">No renewals coming up.</li>}
           </ul>
         </section>
       </div>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Recent activity</h2>
-        <ul className="space-y-3">
+      <section className="card">
+        <h2 className="section-title mb-4">Recent activity</h2>
+        <ul className="space-y-4">
           {activities?.map((activity) => (
             <li key={activity.id} className="text-sm">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <Badge value={activity.type} />
-                <Link href={`/companies/${(activity as any).companies?.id}`} className="font-medium text-brand">
+                <Link href={`/companies/${(activity as any).companies?.id}`} className="link-accent">
                   {(activity as any).companies?.name}
                 </Link>
-                <span className="text-xs text-slate-400">{formatDate(activity.created_at)}</span>
+                <span className="text-xs text-stone-400">{formatDate(activity.created_at)}</span>
               </div>
-              <p className="mt-1 text-slate-700">{activity.body}</p>
+              <p className="mt-1.5 text-stone-700">{activity.body}</p>
             </li>
           ))}
-          {activities?.length === 0 && <li className="text-sm text-slate-400">No activity yet.</li>}
+          {activities?.length === 0 && <li className="text-sm text-stone-400">No activity yet.</li>}
         </ul>
       </section>
     </div>

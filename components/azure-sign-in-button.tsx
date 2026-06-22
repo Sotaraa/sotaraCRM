@@ -23,9 +23,9 @@ export function AzureSignInButton() {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="flex w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+      className="flex w-full items-center justify-center gap-2.5 rounded-md border border-stone-300 bg-white px-3.5 py-2.5 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 disabled:opacity-60"
     >
-      <svg width="16" height="16" viewBox="0 0 21 21" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 21 21" aria-hidden="true">
         <rect x="1" y="1" width="9" height="9" fill="#f25022" />
         <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
         <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
