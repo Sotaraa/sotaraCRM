@@ -14,9 +14,9 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-image: radial-gradient(ellipse 900px 600px at 8% -8%, rgb(176 195 232 / 0.22), transparent 60%),
-    radial-gradient(ellipse 700px 520px at 100% 0%, rgb(199 184 224 / 0.16), transparent 60%),
-    radial-gradient(ellipse 900px 700px at 60% 100%, rgb(178 205 188 / 0.14), transparent 60%);
+  background-image: radial-gradient(ellipse 900px 600px at 8% -8%, rgb(176 195 232 / 0.26), transparent 60%),
+    radial-gradient(ellipse 750px 560px at 102% 4%, rgb(189 107 59 / 0.13), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 55% 105%, rgb(178 205 188 / 0.18), transparent 60%);
   background-color: #faf9f7;
 }
 

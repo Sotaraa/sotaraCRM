@@ -11,6 +11,11 @@ const config: Config = {
           light: "#3D4D78",
           tint: "#EEF1F7",
         },
+        accent: {
+          DEFAULT: "#BD6B3B",
+          dark: "#9A5429",
+          tint: "#FBEEE3",
+        },
         stone: {
           25: "#FAFAF8",
         },

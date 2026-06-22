@@ -2,7 +2,7 @@
 
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-const COLORS = ["#1F2B49", "#7C9885", "#C99A4B", "#9B7EBD", "#4F86A8"];
+const COLORS = ["#1F2B49", "#BD6B3B", "#7C9885", "#9B7EBD", "#4F86A8"];
 
 interface ProductDatum {
   name: string;

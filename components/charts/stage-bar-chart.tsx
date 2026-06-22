@@ -11,16 +11,17 @@ interface StageDatum {
 export function StageBarChart({ data }: { data: StageDatum[] }) {
   return (
     <ResponsiveContainer width="100%" height={230}>
-      <BarChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-        <CartesianGrid vertical={false} stroke="#E7E5E4" strokeDasharray="3 3" />
-        <XAxis
+      <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, left: 4, bottom: 0 }}>
+        <CartesianGrid horizontal={false} stroke="#E7E5E4" strokeDasharray="3 3" />
+        <XAxis type="number" tick={{ fontSize: 11, fill: "#78716c" }} axisLine={false} tickLine={false} />
+        <YAxis
+          type="category"
           dataKey="name"
-          tick={{ fontSize: 11, fill: "#78716c" }}
+          tick={{ fontSize: 11.5, fill: "#57534e" }}
           axisLine={false}
           tickLine={false}
-          interval={0}
+          width={92}
         />
-        <YAxis tick={{ fontSize: 11, fill: "#78716c" }} axisLine={false} tickLine={false} width={44} />
         <Tooltip
           cursor={{ fill: "rgba(31,43,73,0.06)" }}
           contentStyle={{
@@ -34,7 +35,7 @@ export function StageBarChart({ data }: { data: StageDatum[] }) {
             "Value",
           ]) as any}
         />
-        <Bar dataKey="value" radius={[6, 6, 0, 0]} fill="#1F2B49" maxBarSize={38} />
+        <Bar dataKey="value" radius={[0, 6, 6, 0]} fill="#1F2B49" maxBarSize={20} />
       </BarChart>
     </ResponsiveContainer>
   );

@@ -60,7 +60,7 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
             onDragLeave={() => setOverStage((s) => (s === stage.id ? null : s))}
             onDrop={() => onDrop(stage.id)}
             className={`w-64 flex-shrink-0 rounded-2xl border p-3 backdrop-blur-md transition-colors ${
-              isOver ? "border-brand/30 bg-brand-tint/70" : "border-white/50 bg-white/35"
+              isOver ? "border-accent/40 bg-accent-tint/70" : "border-white/50 bg-white/35"
             }`}
           >
             <div className="mb-3 flex items-center justify-between px-1">

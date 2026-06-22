@@ -62,7 +62,7 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-4 gap-4">
         <StatCard label="Open pipeline value" value={formatCurrency(pipelineValue)} icon={Banknote} tint="brand" />
-        <StatCard label="Open deals" value={openDeals?.length ?? 0} icon={Layers} tint="amber" />
+        <StatCard label="Open deals" value={openDeals?.length ?? 0} icon={Layers} tint="accent" />
         <StatCard label="Renewals next 60 days" value={renewals?.length ?? 0} icon={CalendarClock} tint="emerald" />
         <StatCard label="Open tasks" value={tasks?.length ?? 0} icon={ListChecks} tint="amber" />
       </div>

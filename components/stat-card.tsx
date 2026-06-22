@@ -4,6 +4,7 @@ const TINTS = {
   brand: { bg: "bg-brand-tint", text: "text-brand" },
   emerald: { bg: "bg-emerald-50", text: "text-emerald-600" },
   amber: { bg: "bg-amber-50", text: "text-amber-600" },
+  accent: { bg: "bg-accent-tint", text: "text-accent" },
 };
 
 export function StatCard({
