@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { Avatar } from "@/components/avatar";
 
 export default async function ContactsPage() {
   const supabase = await createClient();
@@ -25,7 +26,12 @@ export default async function ContactsPage() {
           <tbody>
             {contacts?.map((contact) => (
               <tr key={contact.id}>
-                <td className="font-medium text-stone-800">{contact.name}</td>
+                <td className="font-medium text-stone-800">
+                  <div className="flex items-center gap-3">
+                    <Avatar name={contact.name} size="sm" />
+                    {contact.name}
+                  </div>
+                </td>
                 <td className="text-stone-600">{contact.role ?? "—"}</td>
                 <td>
                   <Link href={`/companies/${(contact as any).companies?.id}`} className="link-accent">

@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { Banknote, Layers, CalendarClock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/badge";
+import { Avatar } from "@/components/avatar";
+import { StatCard } from "@/components/stat-card";
 import { formatCurrency, formatDate, daysUntil } from "@/lib/format";
 
 export default async function DashboardPage() {
@@ -32,61 +35,65 @@ export default async function DashboardPage() {
       value: inStage.reduce((sum, d) => sum + (d.value ?? 0), 0),
     };
   });
+  const maxStageValue = Math.max(1, ...dealsByStage.map((s) => s.value));
 
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold text-stone-900">Dashboard</h1>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="card">
-          <p className="section-title">Open pipeline value</p>
-          <p className="mt-2 font-display text-3xl font-semibold text-stone-900">{formatCurrency(pipelineValue)}</p>
-        </div>
-        <div className="card">
-          <p className="section-title">Open deals</p>
-          <p className="mt-2 font-display text-3xl font-semibold text-stone-900">{openDeals?.length ?? 0}</p>
-        </div>
-        <div className="card">
-          <p className="section-title">Renewals next 60 days</p>
-          <p className="mt-2 font-display text-3xl font-semibold text-stone-900">{renewals?.length ?? 0}</p>
-        </div>
+        <StatCard label="Open pipeline value" value={formatCurrency(pipelineValue)} icon={Banknote} tint="brand" />
+        <StatCard label="Open deals" value={openDeals?.length ?? 0} icon={Layers} tint="amber" />
+        <StatCard label="Renewals next 60 days" value={renewals?.length ?? 0} icon={CalendarClock} tint="emerald" />
       </div>
 
       <div className="grid grid-cols-2 gap-6">
         <section className="card">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-5 flex items-center justify-between">
             <h2 className="section-title">Deals by stage</h2>
             <Link href="/pipeline" className="link-accent text-sm">
               View pipeline →
             </Link>
           </div>
-          <ul className="space-y-2.5">
+          <ul className="space-y-4">
             {dealsByStage.map(({ stage, count, value }) => (
-              <li key={stage.id} className="flex items-center justify-between text-sm">
-                <span className="text-stone-700">{stage.name}</span>
-                <span className="text-stone-500">
-                  {count} · {formatCurrency(value)}
-                </span>
+              <li key={stage.id}>
+                <div className="mb-1.5 flex items-center justify-between text-sm">
+                  <span className="text-stone-700">{stage.name}</span>
+                  <span className="text-stone-500">
+                    {count} · {formatCurrency(value)}
+                  </span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-stone-100">
+                  <div
+                    className="h-full rounded-full bg-brand"
+                    style={{ width: `${Math.max(2, (value / maxStageValue) * 100)}%` }}
+                  />
+                </div>
               </li>
             ))}
           </ul>
         </section>
 
         <section className="card">
-          <h2 className="section-title mb-4">Upcoming renewals</h2>
-          <ul className="space-y-3">
+          <h2 className="section-title mb-5">Upcoming renewals</h2>
+          <ul className="space-y-4">
             {renewals?.map((sub) => {
               const days = daysUntil(sub.renewal_date);
+              const companyName = (sub as any).companies?.name ?? "Unknown";
               return (
-                <li key={sub.id} className="text-sm">
-                  <div className="flex items-center justify-between">
-                    <Link href={`/companies/${(sub as any).companies?.id}`} className="link-accent">
-                      {(sub as any).companies?.name}
-                    </Link>
-                    <span className="text-xs font-medium text-amber-600">{days}d</span>
-                  </div>
-                  <div className="text-stone-500">
-                    {(sub as any).products?.name} · renews {formatDate(sub.renewal_date)}
+                <li key={sub.id} className="flex items-center gap-3 text-sm">
+                  <Avatar name={companyName} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between">
+                      <Link href={`/companies/${(sub as any).companies?.id}`} className="link-accent truncate">
+                        {companyName}
+                      </Link>
+                      <span className="ml-2 flex-shrink-0 text-xs font-medium text-amber-600">{days}d</span>
+                    </div>
+                    <div className="text-stone-500">
+                      {(sub as any).products?.name} · renews {formatDate(sub.renewal_date)}
+                    </div>
                   </div>
                 </li>
               );
@@ -97,20 +104,26 @@ export default async function DashboardPage() {
       </div>
 
       <section className="card">
-        <h2 className="section-title mb-4">Recent activity</h2>
+        <h2 className="section-title mb-5">Recent activity</h2>
         <ul className="space-y-4">
-          {activities?.map((activity) => (
-            <li key={activity.id} className="text-sm">
-              <div className="flex items-center gap-2.5">
-                <Badge value={activity.type} />
-                <Link href={`/companies/${(activity as any).companies?.id}`} className="link-accent">
-                  {(activity as any).companies?.name}
-                </Link>
-                <span className="text-xs text-stone-400">{formatDate(activity.created_at)}</span>
-              </div>
-              <p className="mt-1.5 text-stone-700">{activity.body}</p>
-            </li>
-          ))}
+          {activities?.map((activity) => {
+            const companyName = (activity as any).companies?.name ?? "Unknown";
+            return (
+              <li key={activity.id} className="flex gap-3 text-sm">
+                <Avatar name={companyName} size="sm" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2.5">
+                    <Link href={`/companies/${(activity as any).companies?.id}`} className="link-accent">
+                      {companyName}
+                    </Link>
+                    <Badge value={activity.type} />
+                    <span className="text-xs text-stone-400">{formatDate(activity.created_at)}</span>
+                  </div>
+                  <p className="mt-1 text-stone-700">{activity.body}</p>
+                </div>
+              </li>
+            );
+          })}
           {activities?.length === 0 && <li className="text-sm text-stone-400">No activity yet.</li>}
         </ul>
       </section>

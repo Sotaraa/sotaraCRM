@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
-import { Nav } from "@/components/nav";
+import { Sidebar } from "@/components/sidebar";
 
 const display = Manrope({
   subsets: ["latin"],
@@ -24,8 +24,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body>
-        <Nav />
-        <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <main className="flex-1 overflow-x-hidden px-10 py-10">
+            <div className="mx-auto max-w-5xl">{children}</div>
+          </main>
+        </div>
       </body>
     </html>
   );

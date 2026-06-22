@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/badge";
+import { Avatar } from "@/components/avatar";
 import { createCompany } from "./actions";
 
 export default async function CompaniesPage() {
@@ -52,8 +53,9 @@ export default async function CompaniesPage() {
             {companies?.map((company) => (
               <tr key={company.id}>
                 <td>
-                  <Link href={`/companies/${company.id}`} className="link-accent">
-                    {company.name}
+                  <Link href={`/companies/${company.id}`} className="flex items-center gap-3">
+                    <Avatar name={company.name} size="sm" />
+                    <span className="link-accent">{company.name}</span>
                   </Link>
                 </td>
                 <td className="text-stone-600">{company.type ?? "—"}</td>

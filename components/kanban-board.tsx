@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { updateDealStage } from "@/app/pipeline/actions";
 import { formatCurrency } from "@/lib/format";
+import { Avatar } from "@/components/avatar";
 
 interface DealCard {
   id: string;
@@ -78,10 +79,16 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
                   }}
                   className="cursor-grab rounded-lg border border-stone-200 bg-white p-3 shadow-crisp transition-shadow hover:shadow-card active:cursor-grabbing"
                 >
-                  <Link href={`/companies/${deal.company_id}`} className="text-sm font-medium text-brand hover:text-brand-dark">
-                    {deal.company_name}
-                  </Link>
-                  <div className="mt-1 text-xs text-stone-500">{deal.product_name ?? "—"}</div>
+                  <div className="flex items-center gap-2">
+                    <Avatar name={deal.company_name} size="sm" />
+                    <Link
+                      href={`/companies/${deal.company_id}`}
+                      className="truncate text-sm font-medium text-brand hover:text-brand-dark"
+                    >
+                      {deal.company_name}
+                    </Link>
+                  </div>
+                  <div className="mt-2 text-xs text-stone-500">{deal.product_name ?? "—"}</div>
                   <div className="mt-1.5 text-xs font-semibold text-stone-700">{formatCurrency(deal.value)}</div>
                 </div>
               ))}

@@ -5,6 +5,7 @@ import { Badge } from "@/components/badge";
 import { formatCurrency, formatDate, daysUntil } from "@/lib/format";
 import { addContact, addDeal, addSubscription, addActivity, updateLifecycleStage } from "./actions";
 import { AutoSubmitSelect } from "@/components/stage-select";
+import { Avatar } from "@/components/avatar";
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -38,11 +39,14 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           ← All companies
         </Link>
         <div className="mt-2 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-stone-900">{company.name}</h1>
-            <p className="text-sm text-stone-500">
-              {company.type ?? "—"} {company.website && `· ${company.website}`}
-            </p>
+          <div className="flex items-center gap-3.5">
+            <Avatar name={company.name} />
+            <div>
+              <h1 className="text-2xl font-semibold text-stone-900">{company.name}</h1>
+              <p className="text-sm text-stone-500">
+                {company.type ?? "—"} {company.website && `· ${company.website}`}
+              </p>
+            </div>
           </div>
           <form action={updateLifecycleStage.bind(null, id)}>
             <AutoSubmitSelect
