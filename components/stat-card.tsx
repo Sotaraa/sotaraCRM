@@ -2,9 +2,9 @@ import type { LucideIcon } from "lucide-react";
 
 const TINTS = {
   brand: { bg: "bg-brand-tint", text: "text-brand" },
-  emerald: { bg: "bg-emerald-50", text: "text-emerald-600" },
-  amber: { bg: "bg-amber-50", text: "text-amber-600" },
-  accent: { bg: "bg-accent-tint", text: "text-accent" },
+  emerald: { bg: "bg-emerald-100", text: "text-emerald-700" },
+  amber: { bg: "bg-amber-100", text: "text-amber-700" },
+  accent: { bg: "bg-accent-tint", text: "text-accent-dark" },
 };
 
 export function StatCard({

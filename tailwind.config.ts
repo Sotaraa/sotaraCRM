@@ -9,12 +9,12 @@ const config: Config = {
           DEFAULT: "#1F2B49",
           dark: "#141B2E",
           light: "#3D4D78",
-          tint: "#EEF1F7",
+          tint: "#E1E7F4",
         },
         accent: {
           DEFAULT: "#BD6B3B",
           dark: "#9A5429",
-          tint: "#FBEEE3",
+          tint: "#F6DDC4",
         },
         stone: {
           25: "#FAFAF8",

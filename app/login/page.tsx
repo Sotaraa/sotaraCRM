@@ -11,7 +11,7 @@ export default async function LoginPage({
     <div className="flex min-h-[75vh] items-center justify-center">
       <div className="w-full max-w-sm">
         <div className="mb-6 flex justify-center">
-          <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand font-display text-base font-bold text-white">
+          <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-accent-dark font-display text-base font-bold text-white shadow-crisp">
             S
           </span>
         </div>

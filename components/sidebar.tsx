@@ -15,7 +15,7 @@ export async function Sidebar() {
   return (
     <aside className="sticky top-0 flex h-screen w-60 flex-shrink-0 flex-col border-r border-white/50 bg-white/70 shadow-glass backdrop-blur-xl">
       <div className="flex items-center gap-2 px-5 py-6">
-        <span className="flex h-7 w-7 items-center justify-center rounded-md bg-brand font-display text-xs font-bold text-white shadow-crisp">
+        <span className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-brand to-accent-dark font-display text-xs font-bold text-white shadow-crisp">
           S
         </span>
         <span className="font-display text-[15px] font-semibold tracking-tight text-stone-900">
