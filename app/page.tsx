@@ -5,44 +5,56 @@ import { Badge } from "@/components/badge";
 import { Avatar } from "@/components/avatar";
 import { StatCard } from "@/components/stat-card";
 import { TaskCheckbox } from "@/components/task-checkbox";
+import { StageBarChart } from "@/components/charts/stage-bar-chart";
+import { ProductDonutChart } from "@/components/charts/product-donut-chart";
 import { formatCurrency, formatDate, daysUntil } from "@/lib/format";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
 
-  const [{ data: openDeals }, { data: stages }, { data: renewals }, { data: activities }, { data: tasks }] = await Promise.all([
-    supabase.from("deals").select("value, stage_id, companies(name)").eq("status", "open"),
-    supabase.from("pipeline_stages").select("*").order("sort_order"),
-    supabase
-      .from("subscriptions")
-      .select("*, companies(id, name), products(name)")
-      .eq("status", "active")
-      .not("renewal_date", "is", null)
-      .lte("renewal_date", new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10))
-      .order("renewal_date", { ascending: true }),
-    supabase
-      .from("activities")
-      .select("*, companies(id, name)")
-      .order("created_at", { ascending: false })
-      .limit(8),
-    supabase
-      .from("tasks")
-      .select("*, companies(id, name)")
-      .eq("status", "open")
-      .order("due_date", { ascending: true, nullsFirst: false })
-      .limit(8),
-  ]);
+  const [{ data: openDeals }, { data: stages }, { data: renewals }, { data: activities }, { data: tasks }, { data: activeSubs }] =
+    await Promise.all([
+      supabase.from("deals").select("value, stage_id, companies(name)").eq("status", "open"),
+      supabase.from("pipeline_stages").select("*").order("sort_order"),
+      supabase
+        .from("subscriptions")
+        .select("*, companies(id, name), products(name)")
+        .eq("status", "active")
+        .not("renewal_date", "is", null)
+        .lte("renewal_date", new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10))
+        .order("renewal_date", { ascending: true }),
+      supabase
+        .from("activities")
+        .select("*, companies(id, name)")
+        .order("created_at", { ascending: false })
+        .limit(8),
+      supabase
+        .from("tasks")
+        .select("*, companies(id, name)")
+        .eq("status", "open")
+        .order("due_date", { ascending: true, nullsFirst: false })
+        .limit(8),
+      supabase.from("subscriptions").select("price, products(name)").eq("status", "active"),
+    ]);
 
   const pipelineValue = (openDeals ?? []).reduce((sum, d) => sum + (d.value ?? 0), 0);
   const dealsByStage = (stages ?? []).map((stage) => {
     const inStage = (openDeals ?? []).filter((d) => d.stage_id === stage.id);
     return {
-      stage,
+      name: stage.name,
       count: inStage.length,
       value: inStage.reduce((sum, d) => sum + (d.value ?? 0), 0),
     };
   });
-  const maxStageValue = Math.max(1, ...dealsByStage.map((s) => s.value));
+
+  const revenueByProduct = Object.values(
+    (activeSubs ?? []).reduce((acc: Record<string, { name: string; value: number }>, sub: any) => {
+      const name = sub.products?.name ?? "Other";
+      acc[name] = acc[name] ?? { name, value: 0 };
+      acc[name].value += sub.price ?? 0;
+      return acc;
+    }, {})
+  );
 
   return (
     <div className="space-y-8">
@@ -57,32 +69,22 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-2 gap-6">
         <section className="card">
-          <div className="mb-5 flex items-center justify-between">
+          <div className="mb-2 flex items-center justify-between">
             <h2 className="section-title">Deals by stage</h2>
             <Link href="/pipeline" className="link-accent text-sm">
               View pipeline →
             </Link>
           </div>
-          <ul className="space-y-4">
-            {dealsByStage.map(({ stage, count, value }) => (
-              <li key={stage.id}>
-                <div className="mb-1.5 flex items-center justify-between text-sm">
-                  <span className="text-stone-700">{stage.name}</span>
-                  <span className="text-stone-500">
-                    {count} · {formatCurrency(value)}
-                  </span>
-                </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-stone-100">
-                  <div
-                    className="h-full rounded-full bg-brand"
-                    style={{ width: `${Math.max(2, (value / maxStageValue) * 100)}%` }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+          <StageBarChart data={dealsByStage} />
         </section>
 
+        <section className="card">
+          <h2 className="section-title mb-2">Revenue by product</h2>
+          <ProductDonutChart data={revenueByProduct} />
+        </section>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
         <section className="card">
           <div className="mb-5 flex items-center justify-between">
             <h2 className="section-title">Tasks due</h2>
@@ -118,9 +120,7 @@ export default async function DashboardPage() {
             {tasks?.length === 0 && <li className="text-sm text-stone-400">No open tasks.</li>}
           </ul>
         </section>
-      </div>
 
-      <div className="grid grid-cols-2 gap-6">
         <section className="card">
           <h2 className="section-title mb-5">Upcoming renewals</h2>
           <ul className="space-y-4">
@@ -147,32 +147,32 @@ export default async function DashboardPage() {
             {renewals?.length === 0 && <li className="text-sm text-stone-400">No renewals coming up.</li>}
           </ul>
         </section>
-
-        <section className="card">
-          <h2 className="section-title mb-5">Recent activity</h2>
-          <ul className="space-y-4">
-            {activities?.map((activity) => {
-              const companyName = (activity as any).companies?.name ?? "Unknown";
-              return (
-                <li key={activity.id} className="flex gap-3 text-sm">
-                  <Avatar name={companyName} size="sm" />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2.5">
-                      <Link href={`/companies/${(activity as any).companies?.id}`} className="link-accent">
-                        {companyName}
-                      </Link>
-                      <Badge value={activity.type} />
-                      <span className="text-xs text-stone-400">{formatDate(activity.created_at)}</span>
-                    </div>
-                    <p className="mt-1 text-stone-700">{activity.body}</p>
-                  </div>
-                </li>
-              );
-            })}
-            {activities?.length === 0 && <li className="text-sm text-stone-400">No activity yet.</li>}
-          </ul>
-        </section>
       </div>
+
+      <section className="card">
+        <h2 className="section-title mb-5">Recent activity</h2>
+        <ul className="grid grid-cols-2 gap-x-8 gap-y-4">
+          {activities?.map((activity) => {
+            const companyName = (activity as any).companies?.name ?? "Unknown";
+            return (
+              <li key={activity.id} className="flex gap-3 text-sm">
+                <Avatar name={companyName} size="sm" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2.5">
+                    <Link href={`/companies/${(activity as any).companies?.id}`} className="link-accent">
+                      {companyName}
+                    </Link>
+                    <Badge value={activity.type} />
+                    <span className="text-xs text-stone-400">{formatDate(activity.created_at)}</span>
+                  </div>
+                  <p className="mt-1 text-stone-700">{activity.body}</p>
+                </div>
+              </li>
+            );
+          })}
+          {activities?.length === 0 && <li className="text-sm text-stone-400">No activity yet.</li>}
+        </ul>
+      </section>
     </div>
   );
 }

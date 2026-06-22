@@ -3,9 +3,21 @@
 @tailwind utilities;
 
 body {
+  position: relative;
   background-color: #faf9f7;
   color: #1c1a17;
   font-feature-settings: "cv11", "ss01";
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(ellipse 900px 600px at 8% -8%, rgb(176 195 232 / 0.22), transparent 60%),
+    radial-gradient(ellipse 700px 520px at 100% 0%, rgb(199 184 224 / 0.16), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 60% 100%, rgb(178 205 188 / 0.14), transparent 60%);
+  background-color: #faf9f7;
 }
 
 h1,
@@ -17,7 +29,7 @@ h3 {
 
 @layer components {
   .card {
-    @apply rounded-xl border border-stone-200 bg-white p-5 shadow-card;
+    @apply rounded-2xl border border-white/60 bg-white/70 p-5 shadow-glass backdrop-blur-xl;
   }
 
   .input-field {
@@ -53,7 +65,7 @@ h3 {
   }
 
   .table-shell {
-    @apply overflow-hidden rounded-xl border border-stone-200 bg-white shadow-card;
+    @apply overflow-hidden rounded-2xl border border-white/60 bg-white/70 shadow-glass backdrop-blur-xl;
   }
 
   .table-shell table {
@@ -61,7 +73,7 @@ h3 {
   }
 
   .table-shell thead {
-    @apply bg-stone-50/80 text-left text-stone-500;
+    @apply bg-white/40 text-left text-stone-500;
   }
 
   .table-shell th {

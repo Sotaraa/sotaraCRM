@@ -59,8 +59,8 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
             }}
             onDragLeave={() => setOverStage((s) => (s === stage.id ? null : s))}
             onDrop={() => onDrop(stage.id)}
-            className={`w-64 flex-shrink-0 rounded-xl border p-3 transition-colors ${
-              isOver ? "border-brand/40 bg-brand-tint" : "border-stone-200 bg-stone-100/70"
+            className={`w-64 flex-shrink-0 rounded-2xl border p-3 backdrop-blur-md transition-colors ${
+              isOver ? "border-brand/30 bg-brand-tint/70" : "border-white/50 bg-white/35"
             }`}
           >
             <div className="mb-3 flex items-center justify-between px-1">
@@ -77,7 +77,7 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
                     setDragging(null);
                     setOverStage(null);
                   }}
-                  className="cursor-grab rounded-lg border border-stone-200 bg-white p-3 shadow-crisp transition-shadow hover:shadow-card active:cursor-grabbing"
+                  className="cursor-grab rounded-xl border border-white/60 bg-white/80 p-3 shadow-crisp backdrop-blur-md transition-shadow hover:shadow-card active:cursor-grabbing"
                 >
                   <div className="flex items-center gap-2">
                     <Avatar name={deal.company_name} size="sm" />
@@ -93,7 +93,7 @@ export function KanbanBoard({ stages, deals }: { stages: Stage[]; deals: DealCar
                 </div>
               ))}
               {stageDeals.length === 0 && (
-                <div className="rounded-lg border border-dashed border-stone-300 p-3 text-center text-xs text-stone-400">
+                <div className="rounded-xl border border-dashed border-stone-300/70 p-3 text-center text-xs text-stone-400">
                   Drop here
                 </div>
               )}

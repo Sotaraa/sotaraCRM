@@ -13,9 +13,9 @@ export async function Sidebar() {
   if (!user) return null;
 
   return (
-    <aside className="sticky top-0 flex h-screen w-60 flex-shrink-0 flex-col border-r border-stone-200 bg-white">
+    <aside className="sticky top-0 flex h-screen w-60 flex-shrink-0 flex-col border-r border-white/50 bg-white/70 shadow-glass backdrop-blur-xl">
       <div className="flex items-center gap-2 px-5 py-6">
-        <span className="flex h-7 w-7 items-center justify-center rounded-md bg-brand font-display text-xs font-bold text-white">
+        <span className="flex h-7 w-7 items-center justify-center rounded-md bg-brand font-display text-xs font-bold text-white shadow-crisp">
           S
         </span>
         <span className="font-display text-[15px] font-semibold tracking-tight text-stone-900">
@@ -27,7 +27,7 @@ export async function Sidebar() {
         <SidebarNav />
       </div>
 
-      <div className="border-t border-stone-200 p-3">
+      <div className="border-t border-white/50 p-3">
         <div className="flex items-center gap-2.5 rounded-md px-2 py-2">
           <Avatar name={user.email ?? "?"} size="sm" />
           <span className="flex-1 truncate text-xs text-stone-500">{user.email}</span>
